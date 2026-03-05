@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HTML Tags Reference</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --card: #16161f;
+    --border: #2a2a3a;
+    --accent: #7c6fff;
+    --accent2: #ff6b9d;
+    --accent3: #00d4aa;
+    --text: #e8e8f0;
+    --muted: #6b6b80;
+    --code-bg: #0d0d14;
+    --tag-color: #ff6b9d;
+    --attr-color: #7c6fff;
+    --val-color: #00d4aa;
+    --category-colors: #ff6b9d, #7c6fff, #00d4aa, #ffb347, #ff8c69;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Syne', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  header {
+    padding: 3rem 2rem 2rem;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, #0a0a0f 0%, #111020 50%, #0a0a0f 100%);
+  }
+  header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 60% 80% at 50% 0%, rgba(124,111,255,0.12), transparent);
+    pointer-events: none;
+  }
+  header h1 {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    background: linear-gradient(135deg, #fff 30%, var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  header p {
+    color: var(--muted);
+    margin-top: 0.5rem;
+    font-size: 1rem;
+    letter-spacing: 0.05em;
+  }
+
+  /* SEARCH / FILTER */
+  .controls {
+    padding: 1.5rem 2rem;
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .search-box {
+    flex: 1;
+    min-width: 200px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.6rem 1rem;
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .search-box:focus { border-color: var(--accent); }
+  .filters { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .filter-btn {
+    padding: 0.4rem 0.9rem;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    font-family: 'Syne', sans-serif;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .filter-btn.active, .filter-btn:hover {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+  }
+
+  /* MAIN */
+  main {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  /* CATEGORY SECTIONS */
+  .category {
+    margin-bottom: 3rem;
+  }
+  .category-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .category-dot {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .category-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .category-count {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--muted);
+    margin-left: auto;
+  }
+
+  /* TAG CARDS GRID */
+  .tags-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(600px, 1fr));
+    gap: 1.25rem;
+  }
+
+  @media (max-width: 700px) {
+    .tags-grid { grid-template-columns: 1fr; }
+    main { padding: 1rem; }
+  }
+
+  /* INDIVIDUAL TAG CARD */
+  .tag-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+    animation: fadeUp 0.4s ease both;
+  }
+  .tag-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(124,111,255,0.1);
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.85rem 1.25rem;
+    background: var(--code-bg);
+    border-bottom: 1px solid var(--border);
+  }
+  .tag-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--tag-color);
+  }
+  .tag-desc {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-left: auto;
+    text-align: right;
+    max-width: 55%;
+  }
+
+  /* SPLIT PANE */
+  .split-pane {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .pane {
+    padding: 1rem 1.25rem;
+  }
+  .pane + .pane {
+    border-left: 1px solid var(--border);
+  }
+  .pane-label {
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.6rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .pane-label::before {
+    content: '';
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+  }
+  .code-pane .pane-label::before { background: var(--accent2); }
+  .output-pane .pane-label::before { background: var(--accent3); }
+
+  pre {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    line-height: 1.6;
+    color: #ccc;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  /* Syntax coloring */
+  .hl-tag   { color: var(--tag-color); }
+  .hl-attr  { color: var(--attr-color); }
+  .hl-val   { color: var(--val-color); }
+  .hl-txt   { color: #ccc; }
+  .hl-cm    { color: #555; font-style: italic; }
+
+  /* OUTPUT PANE – render actual HTML */
+  .output-pane .render {
+    font-size: 0.88rem;
+    line-height: 1.6;
+    color: var(--text);
+  }
+  .output-pane .render * { max-width: 100%; }
+  .output-pane .render h1,
+  .output-pane .render h2,
+  .output-pane .render h3,
+  .output-pane .render h4,
+  .output-pane .render h5,
+  .output-pane .render h6 {
+    font-family: 'Syne', sans-serif;
+    color: #fff;
+    margin: 0.2rem 0;
+  }
+  .output-pane .render h1 { font-size: 1.6rem; }
+  .output-pane .render h2 { font-size: 1.3rem; }
+  .output-pane .render h3 { font-size: 1.1rem; }
+  .output-pane .render h4 { font-size: 0.95rem; }
+  .output-pane .render h5 { font-size: 0.85rem; }
+  .output-pane .render h6 { font-size: 0.75rem; color: var(--muted); }
+  .output-pane .render p { margin: 0.3rem 0; }
+  .output-pane .render a { color: var(--accent); }
+  .output-pane .render b, .output-pane .render strong { font-weight: 700; color: #fff; }
+  .output-pane .render i, .output-pane .render em { font-style: italic; color: #bbb; }
+  .output-pane .render u { text-decoration: underline; }
+  .output-pane .render s, .output-pane .render del { text-decoration: line-through; color: var(--muted); }
+  .output-pane .render mark { background: rgba(255,107,157,0.3); color: #fff; padding: 0 3px; border-radius: 2px; }
+  .output-pane .render code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem;
+    background: rgba(124,111,255,0.15);
+    color: var(--accent);
+    padding: 0 5px;
+    border-radius: 3px;
+  }
+  .output-pane .render pre {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.6rem;
+    overflow: auto;
+    color: #aaa;
+  }
+  .output-pane .render blockquote {
+    border-left: 3px solid var(--accent);
+    padding: 0.3rem 0.8rem;
+    color: var(--muted);
+    font-style: italic;
+    background: rgba(124,111,255,0.05);
+    border-radius: 0 4px 4px 0;
+  }
+  .output-pane .render ul, .output-pane .render ol {
+    padding-left: 1.5rem;
+    margin: 0.3rem 0;
+  }
+  .output-pane .render li { margin: 0.15rem 0; }
+  .output-pane .render table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 0.8rem;
+  }
+  .output-pane .render th, .output-pane .render td {
+    border: 1px solid var(--border);
+    padding: 0.3rem 0.6rem;
+    text-align: left;
+  }
+  .output-pane .render th { background: rgba(124,111,255,0.15); color: var(--accent); }
+  .output-pane .render img { max-height: 80px; border-radius: 4px; }
+  .output-pane .render hr { border: none; border-top: 1px solid var(--border); margin: 0.5rem 0; }
+  .output-pane .render form { display: flex; flex-direction: column; gap: 0.4rem; }
+  .output-pane .render input[type="text"],
+  .output-pane .render input[type="email"],
+  .output-pane .render input[type="number"],
+  .output-pane .render input[type="password"],
+  .output-pane .render textarea,
+  .output-pane .render select {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 0.3rem 0.6rem;
+    border-radius: 5px;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.82rem;
+    width: 100%;
+  }
+  .output-pane .render button {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    padding: 0.3rem 0.8rem;
+    border-radius: 5px;
+    font-family: 'Syne', sans-serif;
+    cursor: pointer;
+    font-size: 0.82rem;
+    width: fit-content;
+  }
+  .output-pane .render details { cursor: pointer; }
+  .output-pane .render summary { font-weight: 600; color: var(--accent); }
+  .output-pane .render progress { width: 100%; accent-color: var(--accent); }
+  .output-pane .render meter { width: 100%; }
+  .output-pane .render abbr { text-decoration: underline dotted; cursor: help; color: var(--accent3); }
+  .output-pane .render sup { vertical-align: super; font-size: 0.7em; }
+  .output-pane .render sub { vertical-align: sub; font-size: 0.7em; }
+  .output-pane .render small { font-size: 0.75em; color: var(--muted); }
+  .output-pane .render kbd {
+    font-family: 'JetBrains Mono', monospace;
+    background: #222;
+    border: 1px solid #444;
+    border-bottom: 3px solid #333;
+    border-radius: 4px;
+    padding: 1px 5px;
+    font-size: 0.78rem;
+    color: #ddd;
+  }
+  .output-pane .render var { font-style: italic; color: var(--accent2); }
+  .output-pane .render samp { font-family: 'JetBrains Mono', monospace; color: var(--accent3); font-size: 0.85em; }
+  .output-pane .render dfn { font-style: italic; border-bottom: 1px dashed var(--muted); cursor: help; }
+  .output-pane .render cite { font-style: italic; color: var(--muted); }
+  .output-pane .render address { font-style: normal; color: var(--muted); border-left: 2px solid var(--border); padding-left: 0.6rem; }
+  .output-pane .render figure { text-align: center; }
+  .output-pane .render figcaption { font-size: 0.75rem; color: var(--muted); margin-top: 0.3rem; }
+  .output-pane .render dl dt { font-weight: 700; color: var(--accent); }
+  .output-pane .render dl dd { margin-left: 1.2rem; color: var(--muted); }
+  .output-pane .render ruby rt { font-size: 0.6em; color: var(--muted); }
+  .output-pane .render bdo { color: var(--accent3); }
+  .output-pane .render canvas { border: 1px solid var(--border); border-radius: 4px; }
+
+  /* HIDDEN */
+  .hidden { display: none !important; }
+
+  /* COPY BUTTON */
+  .copy-btn {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 0.7rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: 'JetBrains Mono', monospace;
+    margin-left: auto;
+    transition: all 0.2s;
+  }
+  .copy-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* STATS BAR */
+  .stats-bar {
+    padding: 1rem 2rem;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    gap: 2rem;
+    font-size: 0.78rem;
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .stat span { color: var(--accent); font-weight: 700; }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>&lt;HTML Tags&gt;</h1>
+  <p>Every tag · Side-by-side code &amp; live output</p>
+</header>
+
+<div class="stats-bar">
+  <div>Total tags: <span id="totalCount">0</span></div>
+  <div>Categories: <span>9</span></div>
+  <div>Visible: <span id="visibleCount">0</span></div>
+</div>
+
+<div class="controls">
+  <input class="search-box" type="text" placeholder="Search tags..." id="searchBox" />
+  <div class="filters">
+    <button class="filter-btn active" data-filter="all">All</button>
+    <button class="filter-btn" data-filter="text">Text</button>
+    <button class="filter-btn" data-filter="structure">Structure</button>
+    <button class="filter-btn" data-filter="lists">Lists</button>
+    <button class="filter-btn" data-filter="table">Table</button>
+    <button class="filter-btn" data-filter="form">Form</button>
+    <button class="filter-btn" data-filter="media">Media</button>
+    <button class="filter-btn" data-filter="semantic">Semantic</button>
+    <button class="filter-btn" data-filter="interactive">Interactive</button>
+    <button class="filter-btn" data-filter="meta">Meta</button>
+  </div>
+</div>
+
+<main id="main"></main>
+
+<script>
+const categories = [
+  {
+    id: 'text',
+    name: 'Text & Inline',
+    color: '#ff6b9d',
+    tags: [
+      { tag: 'h1', desc: 'Heading level 1', code: '<h1>Main Title</h1>', output: '<h1>Main Title</h1>' },
+      { tag: 'h2', desc: 'Heading level 2', code: '<h2>Section Title</h2>', output: '<h2>Section Title</h2>' },
+      { tag: 'h3', desc: 'Heading level 3', code: '<h3>Subsection</h3>', output: '<h3>Subsection</h3>' },
+      { tag: 'h4', desc: 'Heading level 4', code: '<h4>Sub-subsection</h4>', output: '<h4>Sub-subsection</h4>' },
+      { tag: 'h5', desc: 'Heading level 5', code: '<h5>Minor heading</h5>', output: '<h5>Minor heading</h5>' },
+      { tag: 'h6', desc: 'Heading level 6', code: '<h6>Smallest heading</h6>', output: '<h6>Smallest heading</h6>' },
+      { tag: 'p',  desc: 'Paragraph',        code: '<p>This is a paragraph of text.</p>', output: '<p>This is a paragraph of text.</p>' },
+      { tag: 'br', desc: 'Line break',        code: 'Line one<br>Line two', output: 'Line one<br>Line two' },
+      { tag: 'hr', desc: 'Horizontal rule',   code: '<hr>', output: '<hr>' },
+      { tag: 'b',  desc: 'Bold text',         code: '<b>Bold text</b>', output: '<b>Bold text</b>' },
+      { tag: 'strong', desc: 'Strong importance', code: '<strong>Important!</strong>', output: '<strong>Important!</strong>' },
+      { tag: 'i',  desc: 'Italic text',       code: '<i>Italic text</i>', output: '<i>Italic text</i>' },
+      { tag: 'em', desc: 'Emphasised text',   code: '<em>Emphasised</em>', output: '<em>Emphasised</em>' },
+      { tag: 'u',  desc: 'Underline',         code: '<u>Underlined</u>', output: '<u>Underlined</u>' },
+      { tag: 's',  desc: 'Strikethrough',     code: '<s>Strikethrough</s>', output: '<s>Strikethrough</s>' },
+      { tag: 'del',desc: 'Deleted text',      code: '<del>Deleted text</del>', output: '<del>Deleted text</del>' },
+      { tag: 'ins',desc: 'Inserted text',     code: '<ins>Inserted text</ins>', output: '<ins>Inserted text</ins>' },
+      { tag: 'mark',desc:'Highlighted text',  code: '<mark>Highlighted</mark>', output: '<mark>Highlighted</mark>' },
+      { tag: 'small',desc:'Smaller text',     code: '<small>Fine print text</small>', output: '<small>Fine print text</small>' },
+      { tag: 'sup', desc: 'Superscript',      code: 'E = mc<sup>2</sup>', output: 'E = mc<sup>2</sup>' },
+      { tag: 'sub', desc: 'Subscript',        code: 'H<sub>2</sub>O', output: 'H<sub>2</sub>O' },
+      { tag: 'abbr',desc: 'Abbreviation',     code: '<abbr title="HyperText Markup Language">HTML</abbr>', output: '<abbr title="HyperText Markup Language">HTML</abbr>' },
+      { tag: 'cite',desc: 'Citation',         code: '<cite>The Odyssey</cite>', output: '<cite>The Odyssey</cite>' },
+      { tag: 'dfn', desc: 'Definition term',  code: '<dfn>HTML</dfn> is a markup language.', output: '<dfn>HTML</dfn> is a markup language.' },
+      { tag: 'kbd', desc: 'Keyboard input',   code: 'Press <kbd>Ctrl</kbd>+<kbd>C</kbd>', output: 'Press <kbd>Ctrl</kbd>+<kbd>C</kbd>' },
+      { tag: 'var', desc: 'Variable',         code: '<var>x</var> = <var>y</var> + 2', output: '<var>x</var> = <var>y</var> + 2' },
+      { tag: 'samp',desc: 'Sample output',    code: '<samp>Error: file not found</samp>', output: '<samp>Error: file not found</samp>' },
+      { tag: 'code',desc: 'Inline code',      code: '<code>console.log("hi")</code>', output: '<code>console.log("hi")</code>' },
+      { tag: 'pre', desc: 'Preformatted text',code: '<pre>  Line 1\n  Line 2</pre>', output: '<pre>  Line 1\n  Line 2</pre>' },
+      { tag: 'blockquote', desc: 'Block quote', code: '<blockquote>To be or not to be.</blockquote>', output: '<blockquote>To be or not to be.</blockquote>' },
+      { tag: 'q',  desc: 'Inline quote',      code: '<q>Inline quote here.</q>', output: '<q>Inline quote here.</q>' },
+      { tag: 'a',  desc: 'Hyperlink',         code: '<a href="#">Click here</a>', output: '<a href="#">Click here</a>' },
+      { tag: 'span',desc:'Inline container',  code: 'Hello <span style="color:hotpink">World</span>!', output: 'Hello <span style="color:hotpink">World</span>!' },
+      { tag: 'bdi', desc: 'Bidirectional isolate', code: 'User: <bdi>مرحبا</bdi>', output: 'User: <bdi>مرحبا</bdi>' },
+      { tag: 'bdo', desc: 'Bidirectional override', code: '<bdo dir="rtl">Reversed text</bdo>', output: '<bdo dir="rtl">Reversed text</bdo>' },
+      { tag: 'ruby',desc: 'Ruby annotation',  code: '<ruby>漢<rt>kan</rt>字<rt>ji</rt></ruby>', output: '<ruby>漢<rt>kan</rt>字<rt>ji</rt></ruby>' },
+      { tag: 'wbr', desc: 'Word break opportunity', code: 'superlongword<wbr>breakhere', output: 'superlongword<wbr>breakhere' },
+    ]
+  },
+  {
+    id: 'structure',
+    name: 'Structure & Layout',
+    color: '#7c6fff',
+    tags: [
+      { tag: 'div',    desc: 'Generic block container', code: '<div style="border:1px dashed #555;padding:6px">A div block</div>', output: '<div style="border:1px dashed #555;padding:6px">A div block</div>' },
+      { tag: 'header', desc: 'Page/section header',    code: '<header style="border-bottom:1px solid #333;padding:4px"><b>Site Header</b></header>', output: '<header style="border-bottom:1px solid #333;padding:4px"><b>Site Header</b></header>' },
+      { tag: 'nav',    desc: 'Navigation links',       code: '<nav><a href="#">Home</a> · <a href="#">About</a></nav>', output: '<nav><a href="#">Home</a> · <a href="#">About</a></nav>' },
+      { tag: 'main',   desc: 'Main content area',      code: '<main style="border:1px dashed #555;padding:4px">Main content</main>', output: '<main style="border:1px dashed #555;padding:4px">Main content</main>' },
+      { tag: 'section',desc: 'Thematic section',       code: '<section style="border:1px dashed #7c6fff;padding:4px"><h3>Section</h3><p>Content here.</p></section>', output: '<section style="border:1px dashed #7c6fff;padding:4px"><h3>Section</h3><p>Content here.</p></section>' },
+      { tag: 'article',desc: 'Self-contained content', code: '<article style="border:1px dashed #7c6fff;padding:4px"><h4>Article Title</h4><p>Body text.</p></article>', output: '<article style="border:1px dashed #7c6fff;padding:4px"><h4>Article Title</h4><p>Body text.</p></article>' },
+      { tag: 'aside',  desc: 'Sidebar / tangential',   code: '<aside style="border-left:3px solid #7c6fff;padding:4px">Sidebar note</aside>', output: '<aside style="border-left:3px solid #7c6fff;padding:4px">Sidebar note</aside>' },
+      { tag: 'footer', desc: 'Page/section footer',    code: '<footer style="border-top:1px solid #333;padding:4px;font-size:.8em">© 2024 Footer</footer>', output: '<footer style="border-top:1px solid #333;padding:4px;font-size:.8em">© 2024 Footer</footer>' },
+      { tag: 'address',desc: 'Contact information',    code: '<address>123 Main St, City, Country</address>', output: '<address>123 Main St, City, Country</address>' },
+    ]
+  },
+  {
+    id: 'lists',
+    name: 'Lists',
+    color: '#00d4aa',
+    tags: [
+      { tag: 'ul', desc: 'Unordered list', code: '<ul><li>Apple</li><li>Banana</li><li>Cherry</li></ul>', output: '<ul><li>Apple</li><li>Banana</li><li>Cherry</li></ul>' },
+      { tag: 'ol', desc: 'Ordered list',   code: '<ol><li>First</li><li>Second</li><li>Third</li></ol>', output: '<ol><li>First</li><li>Second</li><li>Third</li></ol>' },
+      { tag: 'li', desc: 'List item',      code: '<ul><li>Single item</li></ul>', output: '<ul><li>Single item</li></ul>' },
+      { tag: 'dl', desc: 'Description list', code: '<dl><dt>HTML</dt><dd>HyperText Markup Language</dd><dt>CSS</dt><dd>Cascading Style Sheets</dd></dl>', output: '<dl><dt>HTML</dt><dd>HyperText Markup Language</dd><dt>CSS</dt><dd>Cascading Style Sheets</dd></dl>' },
+      { tag: 'dt', desc: 'Description term',   code: '<dl><dt>Term</dt><dd>Definition</dd></dl>', output: '<dl><dt>Term</dt><dd>Definition</dd></dl>' },
+      { tag: 'dd', desc: 'Description details',code: '<dl><dt>HTML</dt><dd>A markup language</dd></dl>', output: '<dl><dt>HTML</dt><dd>A markup language</dd></dl>' },
+    ]
+  },
+  {
+    id: 'table',
+    name: 'Tables',
+    color: '#ffb347',
+    tags: [
+      { tag: 'table',   desc: 'Table',           code: '<table><tr><th>Name</th><th>Age</th></tr><tr><td>Alice</td><td>30</td></tr><tr><td>Bob</td><td>25</td></tr></table>', output: '<table><tr><th>Name</th><th>Age</th></tr><tr><td>Alice</td><td>30</td></tr><tr><td>Bob</td><td>25</td></tr></table>' },
+      { tag: 'thead',   desc: 'Table head',       code: '<table><thead><tr><th>Col A</th><th>Col B</th></tr></thead><tbody><tr><td>1</td><td>2</td></tr></tbody></table>', output: '<table><thead><tr><th>Col A</th><th>Col B</th></tr></thead><tbody><tr><td>1</td><td>2</td></tr></tbody></table>' },
+      { tag: 'tbody',   desc: 'Table body',       code: '<table><thead><tr><th>Item</th></tr></thead><tbody><tr><td>Row 1</td></tr></tbody></table>', output: '<table><thead><tr><th>Item</th></tr></thead><tbody><tr><td>Row 1</td></tr></tbody></table>' },
+      { tag: 'tfoot',   desc: 'Table footer',     code: '<table><tr><td>Data</td></tr><tfoot><tr><td>Footer</td></tr></tfoot></table>', output: '<table><tr><td>Data</td></tr><tfoot><tr><td>Footer</td></tr></tfoot></table>' },
+      { tag: 'tr',      desc: 'Table row',        code: '<table><tr><td>Cell 1</td><td>Cell 2</td></tr></table>', output: '<table><tr><td>Cell 1</td><td>Cell 2</td></tr></table>' },
+      { tag: 'th',      desc: 'Table header cell',code: '<table><tr><th>Header</th><td>Data</td></tr></table>', output: '<table><tr><th>Header</th><td>Data</td></tr></table>' },
+      { tag: 'td',      desc: 'Table data cell',  code: '<table><tr><td>Cell</td></tr></table>', output: '<table><tr><td>Cell</td></tr></table>' },
+      { tag: 'caption', desc: 'Table caption',    code: '<table><caption>My Table</caption><tr><td>Data</td></tr></table>', output: '<table><caption>My Table</caption><tr><td>Data</td></tr></table>' },
+      { tag: 'colgroup',desc: 'Column group',     code: '<table><colgroup><col style="background:rgba(124,111,255,.1)"><col></colgroup><tr><td>Col 1</td><td>Col 2</td></tr></table>', output: '<table><colgroup><col style="background:rgba(124,111,255,.1)"><col></colgroup><tr><td>Col 1</td><td>Col 2</td></tr></table>' },
+    ]
+  },
+  {
+    id: 'form',
+    name: 'Forms & Input',
+    color: '#ff8c69',
+    tags: [
+      { tag: 'form',    desc: 'Form element',         code: '<form><label>Name: <input type="text" placeholder="John"></label><button>Submit</button></form>', output: '<form><label>Name: <input type="text" placeholder="John"></label><button>Submit</button></form>' },
+      { tag: 'input',   desc: 'Input field',          code: '<input type="text" placeholder="Type here...">', output: '<input type="text" placeholder="Type here...">' },
+      { tag: 'button',  desc: 'Clickable button',     code: '<button>Click Me</button>', output: '<button>Click Me</button>' },
+      { tag: 'label',   desc: 'Form label',           code: '<label><input type="checkbox"> Accept terms</label>', output: '<label><input type="checkbox"> Accept terms</label>' },
+      { tag: 'select',  desc: 'Dropdown select',      code: '<select><option>Option 1</option><option>Option 2</option></select>', output: '<select><option>Option 1</option><option>Option 2</option></select>' },
+      { tag: 'option',  desc: 'Dropdown option',      code: '<select><option value="a">Apple</option><option value="b">Banana</option></select>', output: '<select><option value="a">Apple</option><option value="b">Banana</option></select>' },
+      { tag: 'optgroup',desc: 'Option group',         code: '<select><optgroup label="Fruits"><option>Apple</option></optgroup><optgroup label="Vegs"><option>Carrot</option></optgroup></select>', output: '<select><optgroup label="Fruits"><option>Apple</option></optgroup><optgroup label="Vegs"><option>Carrot</option></optgroup></select>' },
+      { tag: 'textarea',desc: 'Multi-line text input',code: '<textarea rows="3" placeholder="Enter text..."></textarea>', output: '<textarea rows="3" placeholder="Enter text..."></textarea>' },
+      { tag: 'fieldset',desc: 'Group form elements',  code: '<fieldset><legend>Personal Info</legend><input type="text" placeholder="Name"></fieldset>', output: '<fieldset style="border:1px solid #444;border-radius:4px;padding:6px"><legend>Personal Info</legend><input type="text" placeholder="Name"></fieldset>' },
+      { tag: 'legend',  desc: 'Fieldset caption',     code: '<fieldset><legend>My Group</legend><p>Content</p></fieldset>', output: '<fieldset style="border:1px solid #444;border-radius:4px;padding:6px"><legend>My Group</legend><p>Content</p></fieldset>' },
+      { tag: 'datalist',desc: 'Input suggestions',    code: '<input list="fruits" placeholder="Choose fruit"><datalist id="fruits"><option value="Apple"><option value="Banana"><option value="Cherry"></datalist>', output: '<input list="fruits2" placeholder="Choose fruit"><datalist id="fruits2"><option value="Apple"><option value="Banana"><option value="Cherry"></datalist>' },
+      { tag: 'output',  desc: 'Calculation output',   code: '<output>42</output>', output: '<output>Result: 42</output>' },
+      { tag: 'progress',desc: 'Progress bar',         code: '<progress value="70" max="100"></progress>', output: '<progress value="70" max="100"></progress>' },
+      { tag: 'meter',   desc: 'Scalar gauge',         code: '<meter value="0.7" min="0" max="1">70%</meter>', output: '<meter value="0.7" min="0" max="1">70%</meter>' },
+    ]
+  },
+  {
+    id: 'media',
+    name: 'Media & Embedding',
+    color: '#64c8ff',
+    tags: [
+      { tag: 'img',    desc: 'Image',          code: '<img src="https://placehold.co/80x60/7c6fff/fff?text=IMG" alt="Placeholder">', output: '<img src="https://placehold.co/80x60/7c6fff/fff?text=IMG" alt="Placeholder">' },
+      { tag: 'figure', desc: 'Figure container',code: '<figure><img src="https://placehold.co/80x50/ff6b9d/fff?text=Fig" alt="fig"><figcaption>Caption here</figcaption></figure>', output: '<figure><img src="https://placehold.co/80x50/ff6b9d/fff?text=Fig" alt="fig"><figcaption>Caption here</figcaption></figure>' },
+      { tag: 'figcaption',desc:'Figure caption',code: '<figure><img src="https://placehold.co/60x40/00d4aa/fff?text=+" alt="x"><figcaption>My Caption</figcaption></figure>', output: '<figure><img src="https://placehold.co/60x40/00d4aa/fff?text=+" alt="x"><figcaption>My Caption</figcaption></figure>' },
+      { tag: 'video',  desc: 'Video element',   code: '<video width="160" controls><source src="#" type="video/mp4">No support.</video>', output: '<video width="160" controls style="background:#000;border:1px solid #333"><source src="" type="video/mp4">Browser does not support video tag.</video>' },
+      { tag: 'audio',  desc: 'Audio element',   code: '<audio controls><source src="#" type="audio/mpeg">No support.</audio>', output: '<audio controls><source src="" type="audio/mpeg">No audio support.</audio>' },
+      { tag: 'source', desc: 'Media source',    code: '<video controls><source src="#" type="video/mp4"></video>', output: '<video controls style="width:100%;max-width:160px;background:#111"><source src="" type="video/mp4">Source element provides media.</video>' },
+      { tag: 'picture',desc: 'Responsive image',code: '<picture><source media="(min-width:600px)" srcset="https://placehold.co/100x50/7c6fff/fff?text=Large"><img src="https://placehold.co/60x40/ff6b9d/fff?text=Small" alt="responsive"></picture>', output: '<picture><source media="(min-width:600px)" srcset="https://placehold.co/100x50/7c6fff/fff?text=Large"><img src="https://placehold.co/60x40/ff6b9d/fff?text=Small" alt="responsive"></picture>' },
+      { tag: 'canvas', desc: 'Drawing canvas',  code: '<canvas id="c1" width="100" height="50"></canvas>', output: '<canvas id="c1" width="100" height="50"></canvas>' },
+      { tag: 'svg',    desc: 'Inline SVG',      code: '<svg width="60" height="40"><rect width="60" height="40" rx="6" fill="#7c6fff"/><text x="30" y="25" text-anchor="middle" fill="#fff" font-size="12">SVG</text></svg>', output: '<svg width="60" height="40"><rect width="60" height="40" rx="6" fill="#7c6fff"/><text x="30" y="25" text-anchor="middle" fill="#fff" font-size="12">SVG</text></svg>' },
+      { tag: 'iframe', desc: 'Inline frame',    code: '<iframe src="about:blank" width="160" height="60" title="Demo"></iframe>', output: '<iframe src="about:blank" width="160" height="60" style="border:1px solid #333;border-radius:4px;background:#0a0a0f" title="Demo"></iframe>' },
+      { tag: 'embed',  desc: 'Embedded resource',code: '<embed type="text/html" src="about:blank" width="120" height="50">', output: '<div style="border:1px dashed #555;padding:4px;font-size:.75rem;color:#666">&lt;embed&gt; — external resource embedder</div>' },
+      { tag: 'object', desc: 'Embedded object', code: '<object data="about:blank" type="text/html" width="120" height="50">Fallback</object>', output: '<object data="about:blank" type="text/html" width="120" height="50" style="border:1px solid #333;border-radius:4px">Fallback content</object>' },
+      { tag: 'map',    desc: 'Image map',       code: '<img src="https://placehold.co/120x60/333/777?text=Map" usemap="#demomap" alt="map"><map name="demomap"><area shape="rect" coords="0,0,60,60" href="#" alt="Left"></map>', output: '<img src="https://placehold.co/120x60/333/777?text=Map" usemap="#demomap2" alt="map"><map name="demomap2"><area shape="rect" coords="0,0,60,60" href="#" alt="Left"></map>' },
+      { tag: 'track',  desc: 'Video text track', code: '<video controls><source src="#"><track kind="subtitles" src="#" srclang="en" label="English"></video>', output: '<div style="font-size:.8rem;color:#555;border:1px dashed #333;padding:5px;border-radius:4px">&lt;track&gt; adds captions/subtitles to &lt;video&gt;</div>' },
+    ]
+  },
+  {
+    id: 'semantic',
+    name: 'Semantic & Meta-content',
+    color: '#98fb98',
+    tags: [
+      { tag: 'time',    desc: 'Date/time',          code: '<time datetime="2024-01-01">January 1, 2024</time>', output: '<time datetime="2024-01-01">January 1, 2024</time>' },
+      { tag: 'data',    desc: 'Machine-readable data',code: '<data value="12345">Product #12345</data>', output: '<data value="12345">Product #12345</data>' },
+      { tag: 'address', desc: 'Contact info',         code: '<address>hello@example.com</address>', output: '<address>hello@example.com</address>' },
+      { tag: 'noscript',desc: 'No-script fallback',   code: '<noscript>Please enable JavaScript.</noscript>', output: '<noscript>Please enable JavaScript.</noscript><span style="color:#555;font-size:.8rem">(renders when JS is off)</span>' },
+      { tag: 'template',desc: 'HTML template',        code: '<template id="t1"><p>Template content</p></template>', output: '<div style="color:#555;font-size:.8rem;border:1px dashed #333;padding:4px;border-radius:4px">&lt;template&gt; — hidden until cloned via JS</div>' },
+      { tag: 'slot',    desc: 'Web component slot',   code: '<slot name="header">Default slot content</slot>', output: '<div style="color:#555;font-size:.8rem;border:1px dashed #333;padding:4px;border-radius:4px">&lt;slot&gt; — Web Component placeholder</div>' },
+    ]
+  },
+  {
+    id: 'interactive',
+    name: 'Interactive Elements',
+    color: '#dda0dd',
+    tags: [
+      { tag: 'details', desc: 'Disclosure widget', code: '<details><summary>Click to expand</summary><p>Hidden content revealed!</p></details>', output: '<details><summary>Click to expand</summary><p>Hidden content revealed!</p></details>' },
+      { tag: 'summary', desc: 'Summary/caption',   code: '<details><summary>FAQ: What is HTML?</summary><p>HyperText Markup Language</p></details>', output: '<details><summary>FAQ: What is HTML?</summary><p>HyperText Markup Language</p></details>' },
+      { tag: 'dialog',  desc: 'Dialog box',        code: '<dialog open><p>I am a dialog!</p><button onclick="this.closest(\'dialog\').close()">Close</button></dialog>', output: '<dialog open style="border:1px solid #444;background:#16161f;color:#e8e8f0;border-radius:8px;padding:12px"><p>I am a dialog!</p><button onclick="closeDialog(this)">Close</button></dialog>' },
+      { tag: 'menu',    desc: 'Menu list',          code: '<menu><li><button>Cut</button></li><li><button>Copy</button></li><li><button>Paste</button></li></menu>', output: '<menu style="list-style:none;padding:0;display:flex;gap:4px"><li><button>Cut</button></li><li><button>Copy</button></li><li><button>Paste</button></li></menu>' },
+    ]
+  },
+  {
+    id: 'meta',
+    name: 'Document & Meta',
+    color: '#f0e68c',
+    tags: [
+      { tag: 'html',    desc: 'Root element',       code: '<!DOCTYPE html>\n<html lang="en">\n  ...\n</html>', output: '<div style="color:#555;font-size:.8rem;border:1px dashed #333;padding:6px;border-radius:4px;font-family:monospace">Root element of every HTML document</div>' },
+      { tag: 'head',    desc: 'Document metadata',  code: '<head>\n  <title>Page Title</title>\n  <meta charset="UTF-8">\n</head>', output: '<div style="color:#555;font-size:.8rem;border:1px dashed #333;padding:6px;border-radius:4px;font-family:monospace">Contains metadata — not rendered visually</div>' },
+      { tag: 'body',    desc: 'Document body',      code: '<body>\n  <p>Visible content here</p>\n</body>', output: '<div style="color:#555;font-size:.8rem;border:1px dashed #333;padding:6px;border-radius:4px;font-family:monospace">All visible page content goes here</div>' },
+      { tag: 'title',   desc: 'Page title (tab)',   code: '<title>My Awesome Page</title>', output: '<div style="color:#f0e68c;font-size:.85rem;border:1px solid #444;padding:5px 8px;border-radius:4px;display:inline-block">📄 My Awesome Page</div>' },
+      { tag: 'meta',    desc: 'Metadata',           code: '<meta charset="UTF-8">\n<meta name="description" content="My page">', output: '<div style="color:#555;font-size:.78rem;border:1px dashed #333;padding:5px;border-radius:4px;font-family:monospace">charset, viewport, description, og:tags…</div>' },
+      { tag: 'link',    desc: 'External resource',  code: '<link rel="stylesheet" href="style.css">\n<link rel="icon" href="favicon.ico">', output: '<div style="color:#555;font-size:.78rem;border:1px dashed #333;padding:5px;border-radius:4px;font-family:monospace">Links CSS, fonts, icons to the document</div>' },
+      { tag: 'style',   desc: 'Embedded CSS',       code: '<style>\n  p { color: hotpink; }\n</style>', output: '<style>.demo-style-p { color:hotpink;font-weight:700 }</style><p class="demo-style-p">Styled via &lt;style&gt; tag!</p>' },
+      { tag: 'script',  desc: 'JavaScript',         code: '<scr\x69pt>\n  console.log("Hello!");\n</scr\x69pt>', output: '<div style="color:#555;font-size:.78rem;border:1px dashed #333;padding:5px;border-radius:4px;font-family:monospace">Executes JavaScript — check console</div>' },
+      { tag: 'base',    desc: 'Base URL',           code: '<base href="https://example.com/">', output: '<div style="color:#555;font-size:.78rem;border:1px dashed #333;padding:5px;border-radius:4px;font-family:monospace">Sets base URL for all relative links</div>' },
+    ]
+  },
+];
+
+function escapeHtml(str) {
+  return str
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;');
+}
+
+function syntaxHighlight(code) {
+  // Very simple syntax colouring
+  return escapeHtml(code)
+    .replace(/&lt;(\/?[\w]+)/g, (_, t) => `&lt;<span class="hl-tag">${t}</span>`)
+    .replace(/(\w+)=&quot;/g, `<span class="hl-attr">$1</span>=<span class="hl-val">&quot;`)
+    .replace(/&quot;([^&]*)&quot;/g, `&quot;$1&quot;</span>`)
+    .replace(/&lt;!--(.*?)--&gt;/g, `<span class="hl-cm">&lt;!--$1--&gt;</span>`);
+}
+
+function closeDialog(btn) {
+  const d = btn.closest('dialog');
+  if (d) d.close();
+}
+
+function buildCard(item, catColor, index) {
+  const id = `card-${item.tag}-${index}`;
+  return `
+  <div class="tag-card" id="${id}" data-tag="${item.tag}">
+    <div class="card-header">
+      <div class="tag-name">&lt;${item.tag}&gt;</div>
+      <div class="tag-desc">${item.desc}</div>
+      <button class="copy-btn" onclick="copyCode(this)">copy</button>
+    </div>
+    <div class="split-pane">
+      <div class="pane code-pane">
+        <div class="pane-label">CODE</div>
+        <pre id="${id}-code">${syntaxHighlight(item.code)}</pre>
+      </div>
+      <div class="pane output-pane">
+        <div class="pane-label">OUTPUT</div>
+        <div class="render">${item.output}</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function render(filter = 'all', search = '') {
+  const main = document.getElementById('main');
+  main.innerHTML = '';
+  let total = 0;
+  let visible = 0;
+
+  categories.forEach(cat => {
+    if (filter !== 'all' && filter !== cat.id) return;
+
+    const filtered = cat.tags.filter(t =>
+      !search || t.tag.toLowerCase().includes(search) || t.desc.toLowerCase().includes(search)
+    );
+    if (!filtered.length) return;
+
+    total += cat.tags.length;
+    visible += filtered.length;
+
+    const sec = document.createElement('div');
+    sec.className = 'category';
+    sec.innerHTML = `
+      <div class="category-header">
+        <div class="category-dot" style="background:${cat.color}"></div>
+        <div class="category-title">${cat.name}</div>
+        <div class="category-count">${filtered.length} tags</div>
+      </div>
+      <div class="tags-grid">
+        ${filtered.map((t, i) => buildCard(t, cat.color, cat.id + i)).join('')}
+      </div>`;
+    main.appendChild(sec);
+  });
+
+  document.getElementById('totalCount').textContent = categories.reduce((a,c)=>a+c.tags.length,0);
+  document.getElementById('visibleCount').textContent = visible;
+
+  // Draw canvas demo
+  const c = document.getElementById('c1');
+  if (c) {
+    const ctx = c.getContext('2d');
+    ctx.fillStyle = '#7c6fff';
+    ctx.fillRect(0,0,40,50);
+    ctx.fillStyle = '#ff6b9d';
+    ctx.beginPath();
+    ctx.arc(75, 25, 18, 0, Math.PI*2);
+    ctx.fill();
+    ctx.fillStyle = '#fff';
+    ctx.font = '10px monospace';
+    ctx.fillText('canvas', 6, 30);
+  }
+}
+
+function copyCode(btn) {
+  const card = btn.closest('.tag-card');
+  if (!card) return;
+  const pre = card.querySelector('pre');
+  if (!pre) return;
+  navigator.clipboard.writeText(pre.innerText).then(() => {
+    btn.textContent = 'copied!';
+    setTimeout(() => btn.textContent = 'copy', 1500);
+  });
+}
+
+// Filter buttons
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    render(btn.dataset.filter, document.getElementById('searchBox').value.toLowerCase());
+  });
+});
+
+// Search
+document.getElementById('searchBox').addEventListener('input', e => {
+  const active = document.querySelector('.filter-btn.active');
+  render(active ? active.dataset.filter : 'all', e.target.value.toLowerCase());
+});
+
+render();
+</script>
+</body>
+</html>
